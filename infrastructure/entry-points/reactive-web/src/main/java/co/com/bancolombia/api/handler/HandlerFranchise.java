@@ -6,6 +6,7 @@ import co.com.bancolombia.api.dto.request.product.AddProductToBranchRequestDto;
 import co.com.bancolombia.api.dto.request.product.ProductRequestDto;
 import co.com.bancolombia.api.dto.request.product.StockProductRequestDto;
 import co.com.bancolombia.api.dto.request.validation.RequestValidator;
+import co.com.bancolombia.api.dto.response.product.ProductLargestStockResponseDto;
 import co.com.bancolombia.api.mapper.FranchiseMapper;
 import co.com.bancolombia.usecase.franchise.usecase.api.FranchiseServicePort;
 import lombok.RequiredArgsConstructor;
@@ -74,6 +75,17 @@ public class HandlerFranchise {
                 .flatMap(response -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(response));
+    }
+
+    public Mono<ServerResponse> getProductLargestStock(ServerRequest serverRequest) {
+        return ServerResponse.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(
+                        franchiseServicePort.findProductLargestStock(
+                                serverRequest.pathVariable(ID_FRANCHISE)
+                        ),
+                        ProductLargestStockResponseDto.class
+                );
     }
 
     public Mono<ServerResponse> updateStockProduct(ServerRequest serverRequest) {

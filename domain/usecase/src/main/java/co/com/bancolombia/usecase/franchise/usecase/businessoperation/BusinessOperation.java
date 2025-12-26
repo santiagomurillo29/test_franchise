@@ -5,9 +5,11 @@ import co.com.bancolombia.model.franchise.globalmessage.GlobalMessage;
 import co.com.bancolombia.model.franchise.model.BranchModel;
 import co.com.bancolombia.model.franchise.model.ProductModel;
 import co.com.bancolombia.usecase.franchise.exception.BusinessException;
+import co.com.bancolombia.usecase.franchise.usecase.view.ProductLargestStockByBranch;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class BusinessOperation {
 
@@ -55,6 +57,22 @@ public class BusinessOperation {
         } else {
             branch.getProducts().add(new ProductModel(productId, productName, stock, null));
         }
+    }
+
+    public static Mono<ProductLargestStockByBranch> findLargestStockProduct(BranchModel branch) {
+        return Mono.justOrEmpty(branch.getProducts())
+                .filter(products -> !products.isEmpty())
+                .map(products -> products.stream()
+                        .max(Comparator.comparingInt(ProductModel::getStock))
+                        .orElseThrow()
+                )
+                .map(product -> new ProductLargestStockByBranch(
+                        branch.getId(),
+                        branch.getName(),
+                        product.getId(),
+                        product.getName(),
+                        product.getStock()
+                ));
     }
 
     public static void validateSameFranchise(BranchModel branch, ProductModel product) {

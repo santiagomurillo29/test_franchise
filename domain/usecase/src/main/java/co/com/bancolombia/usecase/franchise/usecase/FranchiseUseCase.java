@@ -8,6 +8,8 @@ import co.com.bancolombia.model.franchise.model.ProductModel;
 import co.com.bancolombia.usecase.franchise.exception.BusinessException;
 import co.com.bancolombia.usecase.franchise.usecase.api.FranchiseServicePort;
 import co.com.bancolombia.usecase.franchise.usecase.businessoperation.BusinessOperation;
+import co.com.bancolombia.usecase.franchise.usecase.view.ProductLargestStockByBranch;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -92,6 +94,14 @@ public class FranchiseUseCase implements FranchiseServicePort {
                 .flatMap(product ->
                         BusinessOperation.updateProductStock(product, newStock, franchisePersistencePort)
                 );
+    }
+
+    @Override
+    public Flux<ProductLargestStockByBranch> findProductLargestStock(String idFranchise) {
+        return franchisePersistencePort.findFranchiseById(idFranchise)
+                .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)))
+                .flatMapMany(franchise -> Flux.fromIterable(franchise.getBranches()))
+                .flatMap(BusinessOperation::findLargestStockProduct);
     }
 
     @Override

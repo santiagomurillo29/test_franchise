@@ -3,6 +3,8 @@ package co.com.bancolombia.usecase.franchise.usecase.api;
 import co.com.bancolombia.model.franchise.model.BranchModel;
 import co.com.bancolombia.model.franchise.model.FranchiseModel;
 import co.com.bancolombia.model.franchise.model.ProductModel;
+import co.com.bancolombia.usecase.franchise.usecase.view.ProductLargestStockByBranch;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface FranchiseServicePort {
@@ -12,6 +14,8 @@ public interface FranchiseServicePort {
     Mono<BranchModel> addProductToBranch(String idBranch, String idProduct, Integer stockProduct);
 
     Mono<ProductModel> updateStockProduct(String nameProduct, Integer newStockProduct);
+
+    Flux<ProductLargestStockByBranch> findProductLargestStock(String idFranchise);
 
     Mono<Void> deleteProductOfBranch (String idBranch, String idProduct);
 }
