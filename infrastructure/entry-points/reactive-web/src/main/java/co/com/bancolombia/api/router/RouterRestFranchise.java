@@ -14,6 +14,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class RouterRestFranchise {
     @Bean
     public RouterFunction<ServerResponse> routerFunction(HandlerFranchise handlerFranchise) {
-        return route(POST("/api/franchises"), handlerFranchise::createFranchise);
+        return route(POST("/api/franchises"), handlerFranchise::createFranchise)
+                .andRoute(POST("/api/franchises/{idFranchise}/branches"), handlerFranchise::addBranchToFranchise);
     }
 }

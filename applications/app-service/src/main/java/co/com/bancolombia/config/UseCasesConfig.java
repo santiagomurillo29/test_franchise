@@ -4,6 +4,7 @@ import co.com.bancolombia.model.franchise.gateways.FranchisePersistencePort;
 import co.com.bancolombia.mongo.adapter.FranchiseAdapterMongo;
 import co.com.bancolombia.mongo.health.MongoSafeExecutor;
 import co.com.bancolombia.mongo.mapper.FranchiseMapperMongo;
+import co.com.bancolombia.mongo.repository.BranchRepository;
 import co.com.bancolombia.mongo.repository.FranchiseRepository;
 import co.com.bancolombia.usecase.franchise.usecase.FranchiseUseCase;
 import co.com.bancolombia.usecase.franchise.usecase.api.FranchiseServicePort;
@@ -18,12 +19,14 @@ import org.springframework.context.annotation.FilterType;
 public class UseCasesConfig {
         private final MongoSafeExecutor mongoSafeExecutor;
         private final FranchiseRepository franchiseRepository;
+        private final BranchRepository branchRepository;
         private final FranchiseMapperMongo franchiseMapperMongo;
 
         @Bean
         public FranchisePersistencePort franchisePersistencePort(){
                 return new FranchiseAdapterMongo(
                         franchiseRepository,
+                        branchRepository,
                         franchiseMapperMongo,
                         mongoSafeExecutor);
         }

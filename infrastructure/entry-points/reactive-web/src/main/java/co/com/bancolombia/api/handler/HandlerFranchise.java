@@ -1,5 +1,6 @@
 package co.com.bancolombia.api.handler;
 
+import co.com.bancolombia.api.dto.request.branch.BranchRequestDto;
 import co.com.bancolombia.api.dto.request.franchise.FranchiseRequestDto;
 import co.com.bancolombia.api.dto.request.validation.RequestValidator;
 import co.com.bancolombia.api.mapper.FranchiseMapper;
@@ -19,12 +20,25 @@ public class HandlerFranchise {
     private final FranchiseMapper franchiseMapper;
     private final RequestValidator validator;
 
+    private static final String ID_FRANCHISE = "idFranchise";
+
     public Mono<ServerResponse> createFranchise(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(FranchiseRequestDto.class)
                 .flatMap(validator::validate)
                 .map(franchiseMapper::toModelFranchise)
                 .flatMap(franchiseServicePort::createFranchise)
                 .map(franchiseMapper::toDtoFullFranchise)
+                .flatMap(response -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(response));
+    }
+
+    public Mono<ServerResponse> addBranchToFranchise(ServerRequest serverRequest) {
+        return serverRequest.bodyToMono(BranchRequestDto.class)
+                .flatMap(validator::validate)
+                .map(franchiseMapper::toModelBranch)
+                .flatMap(model -> franchiseServicePort.createBranch(serverRequest.pathVariable(ID_FRANCHISE), model))
+                .map(franchiseMapper::toDtoFullBranch)
                 .flatMap(response -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(response));
