@@ -1,4 +1,4 @@
-package co.com.bancolombia.api;
+package co.com.bancolombia.api.handler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
-public class Handler {
+public class HandlerFranchise {
 //private  final UseCase useCase;
 //private  final UseCase2 useCase2;
 

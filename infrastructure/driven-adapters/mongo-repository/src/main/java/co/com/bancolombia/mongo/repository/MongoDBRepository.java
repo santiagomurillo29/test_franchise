@@ -1,4 +1,4 @@
-package co.com.bancolombia.mongo;
+package co.com.bancolombia.mongo.repository;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.data.repository.query.ReactiveQueryByExampleExecutor;
