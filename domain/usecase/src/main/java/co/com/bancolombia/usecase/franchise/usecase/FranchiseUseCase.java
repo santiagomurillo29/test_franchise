@@ -84,4 +84,19 @@ public class FranchiseUseCase implements FranchiseServicePort {
                         })
                 );
     }
+
+    @Override
+    public Mono<Void> deleteProductOfBranch(String idBranch, String idProduct) {
+        return franchisePersistencePort.findBranchById(idBranch)
+                .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)))
+                .flatMap(branch ->
+                        franchisePersistencePort.removeProductFromBranch(idBranch, idProduct)
+                )
+                .flatMap(deleted -> {
+                    if (Boolean.FALSE.equals(deleted)) {
+                        return Mono.error(new BusinessException(GlobalMessage.NOT_FOUND));
+                    }
+                    return Mono.empty();
+                });
+    }
 }

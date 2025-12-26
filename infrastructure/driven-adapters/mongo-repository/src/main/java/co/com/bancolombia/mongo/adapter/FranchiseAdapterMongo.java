@@ -124,6 +124,16 @@ public class FranchiseAdapterMongo implements FranchisePersistencePort {
     }
 
     @Override
+    public Mono<Boolean> removeProductFromBranch(String branchId, String productId) {
+        return mongoSafeExecutor.executeMono(() ->
+                branchRepository.removeProductFromBranch(branchId, productId)
+                        .map(modifiedCount -> modifiedCount > 0)
+                        .doOnSuccess(found -> log.info("Product removed from branch {}", branchId))
+                        .doOnError(e -> log.warn("Product not found in branch {} to remove", branchId))
+        );
+    }
+
+    @Override
     public Mono<Boolean> existsFranchiseByName(String nameFranchise) {
         return mongoSafeExecutor.executeMono(() ->
                 franchiseRepository.existsByName(nameFranchise)

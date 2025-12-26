@@ -16,6 +16,8 @@ public interface FranchisePersistencePort {
     Mono<BranchModel> findBranchById(String idBranch);
     Mono<ProductModel> findProductById(String idProduct);
 
+    Mono<Boolean> removeProductFromBranch(String branchId, String productId);
+
     Mono<Boolean> existsFranchiseByName(String name);
     Mono<Boolean> existsBranchByName(String name);
     Mono<Boolean> existsProductByName(String name);

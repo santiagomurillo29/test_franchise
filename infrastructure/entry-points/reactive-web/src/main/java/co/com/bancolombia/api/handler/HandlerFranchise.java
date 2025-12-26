@@ -24,6 +24,7 @@ public class HandlerFranchise {
 
     private static final String ID_FRANCHISE = "idFranchise";
     private static final String ID_BRANCH = "idBranch";
+    private static final String ID_PRODUCT = "idProduct";
 
     public Mono<ServerResponse> createFranchise(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(FranchiseRequestDto.class)
@@ -72,5 +73,12 @@ public class HandlerFranchise {
                 .flatMap(response -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(response));
+    }
+
+    public Mono<ServerResponse> deleteProductOfBranch(ServerRequest serverRequest) {
+        return franchiseServicePort.deleteProductOfBranch(
+                        serverRequest.pathVariable(ID_BRANCH),
+                        serverRequest.pathVariable(ID_PRODUCT))
+                .then(ServerResponse.noContent().build());
     }
 }
