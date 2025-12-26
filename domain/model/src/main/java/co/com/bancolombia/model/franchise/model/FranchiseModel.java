@@ -1,4 +1,4 @@
-package co.com.bancolombia.model.franchise;
+package co.com.bancolombia.model.franchise.model;
 import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,5 +10,5 @@ import lombok.Setter;
 //@NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class Franchise {
+public class FranchiseModel {
 }

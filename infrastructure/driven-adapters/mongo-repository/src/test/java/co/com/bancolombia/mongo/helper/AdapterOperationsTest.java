@@ -1,7 +1,7 @@
 package co.com.bancolombia.mongo.helper;
 
-import co.com.bancolombia.mongo.MongoDBRepository;
-import co.com.bancolombia.mongo.MongoRepositoryAdapter;
+import co.com.bancolombia.mongo.repository.MongoDBRepository;
+import co.com.bancolombia.mongo.adapter.FranchiseAdapterMongo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -23,7 +23,7 @@ class AdapterOperationsTest {
     @Mock
     private ObjectMapper objectMapper;
 
-    private MongoRepositoryAdapter adapter;
+    private FranchiseAdapterMongo adapter;
 
     private Object entity;
     private Flux<Object> entities;
@@ -34,7 +34,7 @@ class AdapterOperationsTest {
 
         when(objectMapper.map("value", Object.class)).thenReturn("value");
 
-        adapter = new MongoRepositoryAdapter(repository, objectMapper);
+        adapter = new FranchiseAdapterMongo(repository, objectMapper);
 
         entity = "value";
         entities = Flux.just(entity);
