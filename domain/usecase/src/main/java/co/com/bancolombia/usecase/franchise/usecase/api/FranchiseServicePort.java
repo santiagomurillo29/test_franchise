@@ -11,5 +11,7 @@ public interface FranchiseServicePort {
     Mono<ProductModel> createProduct(ProductModel productModel, String idFranchise);
     Mono<BranchModel> addProductToBranch(String idBranch, String idProduct, Integer stockProduct);
 
+    Mono<ProductModel> updateStockProduct(String nameProduct, Integer newStockProduct);
+
     Mono<Void> deleteProductOfBranch (String idBranch, String idProduct);
 }

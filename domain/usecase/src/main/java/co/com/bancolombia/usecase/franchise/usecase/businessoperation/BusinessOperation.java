@@ -15,6 +15,23 @@ public class BusinessOperation {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
+    public static Mono<ProductModel> updateProductStock(
+            ProductModel product,
+            Integer newStock,
+            FranchisePersistencePort franchisePersistencePort
+    ) {
+        if (newStock == null || newStock < 0) {
+            return Mono.error(new BusinessException(GlobalMessage.BAD_PARAMETER));
+        }
+
+        if (product.getStock() != null && product.getStock().equals(newStock)) {
+            return Mono.just(product);
+        }
+
+        product.setStock(newStock);
+        return franchisePersistencePort.saveProduct(product);
+    }
+
     public static Mono<ProductModel> updateMainProductStock(ProductModel product, int stockToSubtract, FranchisePersistencePort franchisePersistencePort) {
         if (product.getStock() < stockToSubtract) {
             return Mono.error(new BusinessException(GlobalMessage.INSUFFICIENT_STOCK));

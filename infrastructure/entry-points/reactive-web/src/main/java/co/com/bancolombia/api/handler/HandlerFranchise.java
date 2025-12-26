@@ -4,6 +4,7 @@ import co.com.bancolombia.api.dto.request.branch.BranchRequestDto;
 import co.com.bancolombia.api.dto.request.franchise.FranchiseRequestDto;
 import co.com.bancolombia.api.dto.request.product.AddProductToBranchRequestDto;
 import co.com.bancolombia.api.dto.request.product.ProductRequestDto;
+import co.com.bancolombia.api.dto.request.product.StockProductRequestDto;
 import co.com.bancolombia.api.dto.request.validation.RequestValidator;
 import co.com.bancolombia.api.mapper.FranchiseMapper;
 import co.com.bancolombia.usecase.franchise.usecase.api.FranchiseServicePort;
@@ -73,6 +74,18 @@ public class HandlerFranchise {
                 .flatMap(response -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(response));
+    }
+
+    public Mono<ServerResponse> updateStockProduct(ServerRequest serverRequest) {
+        return serverRequest.bodyToMono(StockProductRequestDto.class)
+                .flatMap(validator::validate)
+                .flatMap(dto -> franchiseServicePort.updateStockProduct(serverRequest.pathVariable(ID_PRODUCT), dto.getStock()))
+                .map(franchiseMapper::toDtoProduct)
+                .flatMap(updatedProduct ->
+                        ServerResponse.ok()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .bodyValue(updatedProduct)
+                );
     }
 
     public Mono<ServerResponse> deleteProductOfBranch(ServerRequest serverRequest) {

@@ -8,6 +8,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.DELETE;
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import static org.springframework.web.reactive.function.server.RequestPredicates.PATCH;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
@@ -19,6 +20,7 @@ public class RouterRestFranchise {
                 .andRoute(POST("/api/franchises/{idFranchise}/branches"), handlerFranchise::addBranchToFranchise)
                 .andRoute(POST("/api/branches/{idBranch}/products"), handlerFranchise::addProductToBranch)
                 .andRoute(POST("/api/franchises/{idFranchise}/products"), handlerFranchise::createProduct)
+                .andRoute(PATCH("/api/products/{idProduct}/stock"), handlerFranchise::updateStockProduct)
                 .andRoute(DELETE("/api/branches/{idBranch}/products/{idProduct}"), handlerFranchise::deleteProductOfBranch);
     }
 }

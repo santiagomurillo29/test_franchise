@@ -86,6 +86,15 @@ public class FranchiseUseCase implements FranchiseServicePort {
     }
 
     @Override
+    public Mono<ProductModel> updateStockProduct(String idProduct, Integer newStock) {
+        return franchisePersistencePort.findProductById(idProduct)
+                .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)))
+                .flatMap(product ->
+                        BusinessOperation.updateProductStock(product, newStock, franchisePersistencePort)
+                );
+    }
+
+    @Override
     public Mono<Void> deleteProductOfBranch(String idBranch, String idProduct) {
         return franchisePersistencePort.findBranchById(idBranch)
                 .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)))
