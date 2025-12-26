@@ -4,8 +4,10 @@ import co.com.bancolombia.model.franchise.gateways.FranchisePersistencePort;
 import co.com.bancolombia.model.franchise.globalmessage.GlobalMessage;
 import co.com.bancolombia.model.franchise.model.BranchModel;
 import co.com.bancolombia.model.franchise.model.FranchiseModel;
+import co.com.bancolombia.model.franchise.model.ProductModel;
 import co.com.bancolombia.usecase.franchise.exception.BusinessException;
 import co.com.bancolombia.usecase.franchise.usecase.api.FranchiseServicePort;
+import co.com.bancolombia.usecase.franchise.usecase.businessoperation.BusinessOperation;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -43,6 +45,43 @@ public class FranchiseUseCase implements FranchiseServicePort {
                                     }
                                     return franchisePersistencePort.saveBranch(idFranchise, branchModel);
                                 })
+                );
+    }
+
+    @Override
+    public Mono<ProductModel> createProduct(ProductModel productModel, String idFranchise) {
+        return franchisePersistencePort.findFranchiseById(idFranchise)
+                .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)))
+                .flatMap(franchise ->
+                        franchisePersistencePort.existsProductByName(productModel.getName())
+                                .flatMap(exists -> {
+                                    if (Boolean.TRUE.equals(exists)) {
+                                        return Mono.error(new BusinessException(GlobalMessage.BAD_PARAMETER));
+                                    }
+                                    productModel.setFranchiseId(franchise.getId());
+                                    return franchisePersistencePort.saveProduct(productModel);
+                                })
+                );
+    }
+
+    @Override
+    public Mono<BranchModel> addProductToBranch(String idBranch, String productId, Integer stock) {
+        return franchisePersistencePort.findBranchById(idBranch)
+                .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)))
+                .flatMap(branch -> franchisePersistencePort.findProductById(productId)
+                        .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)))
+                        .flatMap(product -> {
+                            BusinessOperation.validateSameFranchise(branch, product);
+                            return BusinessOperation.updateMainProductStock(product, stock, franchisePersistencePort)
+                                    .flatMap(savedProduct -> {
+                                        BusinessOperation.addOrUpdateBranchProduct(
+                                                branch, productId, savedProduct.getName(), stock
+                                        );
+                                        return franchisePersistencePort.updateBranch(branch)
+                                                .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)))
+                                                .thenReturn(branch);
+                                    });
+                        })
                 );
     }
 }

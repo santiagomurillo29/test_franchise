@@ -2,6 +2,8 @@ package co.com.bancolombia.api.handler;
 
 import co.com.bancolombia.api.dto.request.branch.BranchRequestDto;
 import co.com.bancolombia.api.dto.request.franchise.FranchiseRequestDto;
+import co.com.bancolombia.api.dto.request.product.AddProductToBranchRequestDto;
+import co.com.bancolombia.api.dto.request.product.ProductRequestDto;
 import co.com.bancolombia.api.dto.request.validation.RequestValidator;
 import co.com.bancolombia.api.mapper.FranchiseMapper;
 import co.com.bancolombia.usecase.franchise.usecase.api.FranchiseServicePort;
@@ -21,6 +23,7 @@ public class HandlerFranchise {
     private final RequestValidator validator;
 
     private static final String ID_FRANCHISE = "idFranchise";
+    private static final String ID_BRANCH = "idBranch";
 
     public Mono<ServerResponse> createFranchise(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(FranchiseRequestDto.class)
@@ -38,6 +41,33 @@ public class HandlerFranchise {
                 .flatMap(validator::validate)
                 .map(franchiseMapper::toModelBranch)
                 .flatMap(model -> franchiseServicePort.createBranch(serverRequest.pathVariable(ID_FRANCHISE), model))
+                .map(franchiseMapper::toDtoFullBranch)
+                .flatMap(response -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(response));
+    }
+
+    public Mono<ServerResponse> createProduct(ServerRequest serverRequest) {
+        return serverRequest.bodyToMono(ProductRequestDto.class)
+                .flatMap(validator::validate)
+                .map(franchiseMapper::toModelProduct)
+                .flatMap(product -> franchiseServicePort.createProduct(product, serverRequest.pathVariable(ID_FRANCHISE)))
+                .map(franchiseMapper::toDtoProduct)
+                .flatMap(response -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(response));
+    }
+
+    public Mono<ServerResponse> addProductToBranch(ServerRequest serverRequest) {
+        return serverRequest.bodyToMono(AddProductToBranchRequestDto.class)
+                .flatMap(validator::validate)
+                .flatMap(dto ->
+                        franchiseServicePort.addProductToBranch(
+                                serverRequest.pathVariable(ID_BRANCH),
+                                dto.getProductId(),
+                                dto.getStock()
+                        )
+                )
                 .map(franchiseMapper::toDtoFullBranch)
                 .flatMap(response -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)

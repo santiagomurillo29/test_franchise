@@ -4,7 +4,9 @@ public enum GlobalMessage {
 
     BAD_PARAMETER(GlobalMessage.STATUS_CODE_400, "The name is already registered"),
     DATABASE_ERROR(GlobalMessage.STATUS_CODE_500, "Database is down"),
-    NOT_FOUND(GlobalMessage.STATUS_CODE_404, "Name not found");
+    NOT_FOUND(GlobalMessage.STATUS_CODE_404, "Name not found"),
+    INSUFFICIENT_STOCK(GlobalMessage.STATUS_CODE_400, "There is not enough stock"),
+    BRANCH_PRODUCT_DIFFERENT_FRANCHISE(GlobalMessage.STATUS_CODE_400, "The branch and the product are different franchise");
 
     public static final String STATUS_CODE_400 = "400";
     public static final String STATUS_CODE_404 = "404";

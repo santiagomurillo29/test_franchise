@@ -15,6 +15,8 @@ public class RouterRestFranchise {
     @Bean
     public RouterFunction<ServerResponse> routerFunction(HandlerFranchise handlerFranchise) {
         return route(POST("/api/franchises"), handlerFranchise::createFranchise)
-                .andRoute(POST("/api/franchises/{idFranchise}/branches"), handlerFranchise::addBranchToFranchise);
+                .andRoute(POST("/api/franchises/{idFranchise}/branches"), handlerFranchise::addBranchToFranchise)
+                .andRoute(POST("/api/branches/{idBranch}/products"), handlerFranchise::addProductToBranch)
+                .andRoute(POST("/api/franchises/{idFranchise}/products"), handlerFranchise::createProduct);
     }
 }
