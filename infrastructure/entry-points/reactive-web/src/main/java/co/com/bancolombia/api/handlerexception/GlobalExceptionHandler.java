@@ -9,8 +9,8 @@ import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.web.WebProperties;
-import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
-import org.springframework.boot.web.reactive.error.ErrorAttributes;
+import org.springframework.boot.webflux.autoconfigure.error.AbstractErrorWebExceptionHandler;
+import org.springframework.boot.webflux.error.ErrorAttributes;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -24,6 +24,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -54,7 +55,7 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
                 .onErrorResume(BusinessException.class, ex -> handleBusinessException(ex, request))
                 .onErrorResume(DataBaseException.class, ex -> handleDBException(ex, request))
                 .onErrorResume(ConstraintViolationException.class, ex -> handleConstraintViolationException(ex, request))
-                .onErrorResume(ex -> handleUnknownError(ex, request))
+                .onErrorResume(ex -> handleUnknownError( request))
                 .cast(Tuple2.class)
                 .flatMap(tuple -> this.buildResponse(
                         (ErrorResponseBodyDto) tuple.getT1(),
@@ -99,7 +100,7 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
         return Mono.just(body).zipWith(Mono.just(HttpStatus.BAD_REQUEST));
     }
 
-    private Mono<Tuple2<ErrorResponseBodyDto, HttpStatus>> handleUnknownError(Throwable ex,  ServerRequest request) {
+    private Mono<Tuple2<ErrorResponseBodyDto, HttpStatus>> handleUnknownError(ServerRequest request) {
         ErrorResponseBodyDto body = ErrorResponseBodyDto.builder()
                 .message("Unexpected error")
                 .code(GlobalMessage.STATUS_CODE_500)

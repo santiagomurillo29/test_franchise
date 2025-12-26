@@ -14,8 +14,6 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class RouterRestFranchise {
     @Bean
     public RouterFunction<ServerResponse> routerFunction(HandlerFranchise handlerFranchise) {
-        return route(GET("/api/usecase/path"), handlerFranchise::listenGETUseCase)
-                .andRoute(POST("/api/usecase/otherpath"), handlerFranchise::listenPOSTUseCase)
-                .and(route(GET("/api/otherusercase/path"), handlerFranchise::listenGETOtherUseCase));
+        return route(POST("/api/franchises"), handlerFranchise::createFranchise);
     }
 }

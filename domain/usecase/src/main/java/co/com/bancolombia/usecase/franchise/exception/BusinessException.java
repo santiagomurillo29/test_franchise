@@ -1,7 +1,9 @@
 package co.com.bancolombia.usecase.franchise.exception;
 
-public class BusinessException extends RuntimeException {
-    public BusinessException(String message) {
-        super(message);
+import co.com.bancolombia.model.franchise.globalmessage.GlobalMessage;
+
+public class BusinessException extends CoreException{
+    public BusinessException(GlobalMessage error) {
+        super(error);
     }
 }

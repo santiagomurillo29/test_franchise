@@ -4,6 +4,7 @@ import co.com.bancolombia.api.dto.response.branch.BranchFullResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 @NoArgsConstructor
