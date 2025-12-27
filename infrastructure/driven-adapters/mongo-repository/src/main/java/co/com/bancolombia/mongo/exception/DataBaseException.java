@@ -1,7 +1,10 @@
 package co.com.bancolombia.mongo.exception;
 
-public class DataBaseException extends RuntimeException {
-    public DataBaseException(String message) {
-        super(message);
+import co.com.bancolombia.model.franchise.globalmessage.GlobalMessage;
+import co.com.bancolombia.usecase.franchise.exception.CoreException;
+
+public class DataBaseException extends CoreException {
+    public DataBaseException(GlobalMessage error){
+        super(error);
     }
 }

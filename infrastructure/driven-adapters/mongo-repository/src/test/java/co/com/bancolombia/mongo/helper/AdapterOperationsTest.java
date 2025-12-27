@@ -1,6 +1,5 @@
 package co.com.bancolombia.mongo.helper;
 
-import co.com.bancolombia.mongo.repository.MongoDBRepository;
 import co.com.bancolombia.mongo.adapter.FranchiseAdapterMongo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
