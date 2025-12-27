@@ -20,6 +20,7 @@ public class RouterRestFranchise {
                 .andRoute(POST("/api/franchises/{idFranchise}/branches"), handlerFranchise::addBranchToFranchise)
                 .andRoute(POST("/api/branches/{idBranch}/products"), handlerFranchise::addProductToBranch)
                 .andRoute(POST("/api/franchises/{idFranchise}/products"), handlerFranchise::createProduct)
+                .andRoute(GET("/"), request -> handlerFranchise.getHealth())
                 .andRoute(GET("/api/franchises/{idFranchise}/largest-stock"), handlerFranchise::getProductLargestStock)
                 .andRoute(GET("/api/franchises/{idFranchise}"), handlerFranchise::getFranchiseById)
                 .andRoute(GET("/api/branches/{idBranch}"), handlerFranchise::getBranchById)
