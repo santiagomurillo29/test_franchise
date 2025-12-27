@@ -162,6 +162,27 @@ public class FranchiseUseCase implements FranchiseServicePort {
     }
 
     @Override
+    public Mono<FranchiseModel> findFranchiseById(String idFranchise) {
+        return franchisePersistencePort.findFranchiseById(idFranchise)
+                .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)));
+    }
+
+    @Override
+    public Mono<BranchModel> findBranchById(String idBranch) {
+        return franchisePersistencePort.findBranchById(idBranch)
+                .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)));
+    }
+
+    @Override
+    public Flux<ProductModel> findProductsByFranchiseId(String idFranchise) {
+        return franchisePersistencePort.findFranchiseById(idFranchise)
+                .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)))
+                .flatMapMany(franchise ->
+                        franchisePersistencePort.findProductsByFranchiseId(idFranchise)
+                                .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND))));
+    }
+
+    @Override
     public Flux<ProductLargestStockByBranch> findProductLargestStock(String idFranchise) {
         return franchisePersistencePort.findFranchiseById(idFranchise)
                 .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)))

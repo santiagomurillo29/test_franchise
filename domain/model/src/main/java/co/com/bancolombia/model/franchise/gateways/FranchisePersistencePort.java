@@ -3,6 +3,7 @@ package co.com.bancolombia.model.franchise.gateways;
 import co.com.bancolombia.model.franchise.model.BranchModel;
 import co.com.bancolombia.model.franchise.model.FranchiseModel;
 import co.com.bancolombia.model.franchise.model.ProductModel;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface FranchisePersistencePort {
@@ -16,6 +17,7 @@ public interface FranchisePersistencePort {
     Mono<FranchiseModel> findFranchiseById(String idFranchise);
     Mono<BranchModel> findBranchById(String idBranch);
     Mono<ProductModel> findProductById(String idProduct);
+    Flux<ProductModel> findProductsByFranchiseId(String idFranchise);
 
     Mono<Boolean> removeProductFromBranch(String branchId, String productId);
 

@@ -12,6 +12,7 @@ import co.com.bancolombia.mongo.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -129,6 +130,15 @@ public class FranchiseAdapterMongo implements FranchisePersistencePort {
                         .doOnSuccess(found -> log.info("Product found with id: {}", found))
                         .doOnError(e -> log.error("Error finding product by id {}: {}", idProduct, e.getMessage()))
                         .switchIfEmpty(Mono.empty())
+        );
+    }
+
+    @Override
+    public Flux<ProductModel> findProductsByFranchiseId(String idFranchise) {
+        return mongoSafeExecutor.executeFlux(() ->
+                productRepository.findByFranchiseId(idFranchise)
+                        .map(franchiseMapperMongo::toModelProduct)
+                        .doOnSubscribe(sub -> log.info("Fetching products for franchise: {}", idFranchise))
         );
     }
 

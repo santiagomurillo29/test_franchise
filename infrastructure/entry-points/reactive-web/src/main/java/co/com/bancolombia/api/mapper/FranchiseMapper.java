@@ -15,6 +15,8 @@ import co.com.bancolombia.model.franchise.model.ProductModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface FranchiseMapper {
 
@@ -36,4 +38,5 @@ public interface FranchiseMapper {
     ProductModel toModelProduct(ProductRequestDto productRequestDto);
     ProductResponseDto toDtoProduct(ProductModel productModel);
     ProductNameResponseDto toDtoProductName(ProductModel productModel);
+    List<ProductResponseDto> toDtoProductList(List<ProductModel> products);
 }

@@ -89,6 +89,32 @@ public class HandlerFranchise {
                 );
     }
 
+    public Mono<ServerResponse> getFranchiseById(ServerRequest serverRequest) {
+        return franchiseServicePort.findFranchiseById(serverRequest.pathVariable(ID_FRANCHISE))
+                .map(franchiseMapper::toDtoFullFranchise)
+                .flatMap(response -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(response));
+    }
+
+    public Mono<ServerResponse> getBranchById(ServerRequest serverRequest) {
+        return franchiseServicePort.findBranchById(serverRequest.pathVariable(ID_BRANCH))
+                .map(franchiseMapper::toDtoFullBranch)
+                .flatMap(response -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(response));
+    }
+
+
+    public Mono<ServerResponse> getProductByFranchiseId(ServerRequest serverRequest) {
+        return franchiseServicePort.findProductsByFranchiseId(serverRequest.pathVariable(ID_FRANCHISE))
+                .collectList()
+                .map(franchiseMapper::toDtoProductList)
+                .flatMap(response -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(response));
+    }
+
     public Mono<ServerResponse> updateStockProduct(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(StockProductRequestDto.class)
                 .flatMap(validator::validate)

@@ -18,6 +18,9 @@ public interface FranchiseServicePort {
     Mono<BranchModel> updateNameBranch(String nameBranch, String newNameBranch);
     Mono<ProductModel> updateNameProduct(String nameProduct, String newNameProduct);
 
+    Mono<FranchiseModel> findFranchiseById(String idFranchise);
+    Mono<BranchModel> findBranchById(String idBranch);
+    Flux<ProductModel> findProductsByFranchiseId(String idFranchise);
     Flux<ProductLargestStockByBranch> findProductLargestStock(String idFranchise);
 
     Mono<Void> deleteProductOfBranch (String idBranch, String idProduct);
