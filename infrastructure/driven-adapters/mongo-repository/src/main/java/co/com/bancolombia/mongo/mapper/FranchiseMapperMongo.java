@@ -27,12 +27,10 @@ public interface FranchiseMapperMongo {
     ProductEntity toEntityProduct(ProductModel productModel);
     ProductModel toModelProduct(ProductEntity productEntity);
 
-    @Mapping(target = "id", source = "productId")
     @Mapping(target = "franchiseId", ignore = true)
     ProductModel toModel(BranchProductTuple tuple);
 
     List<ProductModel> toModelList(List<BranchProductTuple> tuples);
-    @Mapping(source = "id", target = "productId")
     List<BranchProductTuple> toTupleList(List<ProductModel> models);
 
     List<BranchModel> toModelBranchList(List<BranchEntity> branchEntities);

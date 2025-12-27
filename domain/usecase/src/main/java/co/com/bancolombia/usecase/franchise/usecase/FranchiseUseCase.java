@@ -77,7 +77,7 @@ public class FranchiseUseCase implements FranchiseServicePort {
                             return BusinessOperation.updateMainProductStock(product, stock, franchisePersistencePort)
                                     .flatMap(savedProduct -> {
                                         BusinessOperation.addOrUpdateBranchProduct(
-                                                branch, productId, savedProduct.getName(), stock
+                                                branch, savedProduct.getId(), savedProduct.getName(), stock
                                         );
                                         return franchisePersistencePort.updateBranch(branch)
                                                 .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)))
@@ -94,6 +94,71 @@ public class FranchiseUseCase implements FranchiseServicePort {
                 .flatMap(product ->
                         BusinessOperation.updateProductStock(product, newStock, franchisePersistencePort)
                 );
+    }
+
+    @Override
+    public Mono<FranchiseModel> updateNameFranchise(String idFranchise, String newName) {
+        return franchisePersistencePort.findFranchiseById(idFranchise)
+                .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)))
+                .flatMap(franchise -> {
+
+                    if (franchise.getName().equalsIgnoreCase(newName)) {
+                        return Mono.just(franchise);
+                    }
+
+                    return franchisePersistencePort.existsFranchiseByName(newName)
+                            .flatMap(exists -> {
+                                if (Boolean.TRUE.equals(exists)) {
+                                    return Mono.error(new BusinessException(GlobalMessage.BAD_PARAMETER));
+                                }
+                                franchise.setName(newName);
+                                return franchisePersistencePort.saveFranchise(franchise)
+                                        .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)));
+                            });
+                });
+    }
+
+    @Override
+    public Mono<BranchModel> updateNameBranch(String idBranch, String newName) {
+        return franchisePersistencePort.findBranchById(idBranch)
+                .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)))
+                .flatMap(branch -> {
+                    if (branch.getName().equalsIgnoreCase(newName)) {
+                        return Mono.just(branch);
+                    }
+                    return franchisePersistencePort.existsBranchByName(newName)
+                            .flatMap(exists -> {
+                                if (Boolean.TRUE.equals(exists)) {
+                                    return Mono.error(new BusinessException(GlobalMessage.BAD_PARAMETER));
+                                }
+                                branch.setName(newName);
+                                return franchisePersistencePort.updateBranch(branch)
+                                        .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)));
+                            });
+                });
+    }
+
+    @Override
+    public Mono<ProductModel> updateNameProduct(String idProduct, String newName) {
+        return franchisePersistencePort.findProductById(idProduct)
+                .switchIfEmpty(Mono.error(new BusinessException(GlobalMessage.NOT_FOUND)))
+                .flatMap(product -> {
+                    if (product.getName().equalsIgnoreCase(newName)) {
+                        return Mono.just(product);
+                    }
+                    return franchisePersistencePort.existsProductByName(newName)
+                            .flatMap(exists -> {
+                                if (Boolean.TRUE.equals(exists)) {
+                                    return Mono.error(new BusinessException(GlobalMessage.BAD_PARAMETER));
+                                }
+                                product.setName(newName);
+                                return franchisePersistencePort.saveProduct(product)
+                                        .flatMap(savedProduct ->
+                                                franchisePersistencePort.updateProductNameInBranches(idProduct, newName)
+                                                        .thenReturn(savedProduct)
+                                        );
+                            });
+                });
     }
 
     @Override

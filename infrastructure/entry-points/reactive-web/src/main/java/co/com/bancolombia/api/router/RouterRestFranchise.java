@@ -22,6 +22,9 @@ public class RouterRestFranchise {
                 .andRoute(POST("/api/franchises/{idFranchise}/products"), handlerFranchise::createProduct)
                 .andRoute(GET("/api/franchises/{idFranchise}/largest-stock"), handlerFranchise::getProductLargestStock)
                 .andRoute(PATCH("/api/products/{idProduct}/stock"), handlerFranchise::updateStockProduct)
+                .andRoute(PATCH("/api/franchises/{idFranchise}/name"), handlerFranchise::updateNameFranchise)
+                .andRoute(PATCH("/api/branches/{idBranch}/name"), handlerFranchise::updateNameBranch)
+                .andRoute(PATCH("/api/products/{idProduct}/name"), handlerFranchise::updateNameProduct)
                 .andRoute(DELETE("/api/branches/{idBranch}/products/{idProduct}"), handlerFranchise::deleteProductOfBranch);
     }
 }

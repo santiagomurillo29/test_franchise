@@ -1,14 +1,13 @@
-package co.com.bancolombia.mongo.entity;
+package co.com.bancolombia.api.dto.response.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class BranchProductTuple {
+@AllArgsConstructor
+@Data
+public class ProductNameResponseDto {
     private String id;
     private String name;
-    private Integer stock;
 }

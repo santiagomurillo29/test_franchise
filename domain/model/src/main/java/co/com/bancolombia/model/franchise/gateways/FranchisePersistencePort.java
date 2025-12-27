@@ -11,6 +11,7 @@ public interface FranchisePersistencePort {
     Mono<ProductModel> saveProduct(ProductModel productModel);
 
     Mono<BranchModel> updateBranch(BranchModel branchModel);
+    Mono<Void> updateProductNameInBranches(String productId, String newName);
 
     Mono<FranchiseModel> findFranchiseById(String idFranchise);
     Mono<BranchModel> findBranchById(String idBranch);

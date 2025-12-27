@@ -14,6 +14,9 @@ public interface FranchiseServicePort {
     Mono<BranchModel> addProductToBranch(String idBranch, String idProduct, Integer stockProduct);
 
     Mono<ProductModel> updateStockProduct(String nameProduct, Integer newStockProduct);
+    Mono<FranchiseModel> updateNameFranchise(String idFranchise, String newNameFranchise);
+    Mono<BranchModel> updateNameBranch(String nameBranch, String newNameBranch);
+    Mono<ProductModel> updateNameProduct(String nameProduct, String newNameProduct);
 
     Flux<ProductLargestStockByBranch> findProductLargestStock(String idFranchise);
 

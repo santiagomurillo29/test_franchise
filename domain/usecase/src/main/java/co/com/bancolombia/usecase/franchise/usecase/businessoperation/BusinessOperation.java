@@ -42,20 +42,20 @@ public class BusinessOperation {
         return franchisePersistencePort.saveProduct(product);
     }
 
-    public static void addOrUpdateBranchProduct(BranchModel branch, String productId, String productName, Integer stock) {
+    public static void addOrUpdateBranchProduct(BranchModel branch, String savedProductId, String productName, Integer stock) {
         if (branch.getProducts() == null) {
             branch.setProducts(new ArrayList<>());
         }
 
         var existingProduct = branch.getProducts().stream()
-                .filter(p -> p.getId().equals(productId))
+                .filter(p -> savedProductId.equals(p.getId()))
                 .findFirst();
 
         if (existingProduct.isPresent()) {
             var p = existingProduct.get();
-            p.setStock(p.getStock() + stock);
+            p.setStock((p.getStock() == null ? 0 : p.getStock()) + stock);
         } else {
-            branch.getProducts().add(new ProductModel(productId, productName, stock, null));
+            branch.getProducts().add(new ProductModel(savedProductId, productName, stock, null));
         }
     }
 

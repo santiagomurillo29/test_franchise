@@ -13,6 +13,10 @@ public interface BranchRepository extends ReactiveMongoRepository<BranchEntity, 
     Flux<BranchEntity> findByFranchiseId(String idFranchise);
 
     @Query("{ '_id': ?0 }")
-    @Update("{ '$pull': { 'products': { 'productId': ?1 } } }")
+    @Update("{ '$pull': { 'products': { 'id': ?1 } } }")
     Mono<Long> removeProductFromBranch(String branchId, String productId);
+
+    @Query("{ 'products.id': ?0 }")
+    @Update("{ '$set': { 'products.$.name': ?1 } }")
+    Mono<Long> updateProductNameInBranches(String productId, String newName);
 }
