@@ -151,7 +151,6 @@ public class HandlerFranchise {
                 );
     }
 
-
     public Mono<ServerResponse> updateNameProduct(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(NameProductRequestDto.class)
                 .flatMap(validator::validate)
@@ -169,5 +168,11 @@ public class HandlerFranchise {
                         serverRequest.pathVariable(ID_BRANCH),
                         serverRequest.pathVariable(ID_PRODUCT))
                 .then(ServerResponse.noContent().build());
+    }
+
+    public Mono<ServerResponse> getHealth() {
+        return ServerResponse.ok()
+                .contentType(MediaType.TEXT_PLAIN)
+                .bodyValue("OK");
     }
 }
